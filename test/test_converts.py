@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 from hatena2rst import *
+import hatena2rst.main
 
 """
 convert_super_pre()
@@ -266,22 +267,24 @@ def test_image_option_2():
             'scale': '20%'} == option_dict
 
 
-def test_fotolife_normal():
+def test_fotolife_normal(monkeypatch):
+    monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     directive = convert_fotolife("[f:id:hatenadiary:20041007101545j:image]")
-    assert (".. image:: http://f.hatena.ne.jp/images/fotolife/h/" +
-            "hatenadiary/20041007/20041007101545j.png\n") == directive
+    assert (".. image:: 20041007101545.jpg\n") == directive
 
-def test_fotolife_with_option():
+def test_fotolife_with_option(monkeypatch):
+    monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     directive = convert_fotolife("[f:id:hatenadiary:20041007101545j:image:w60,h100]")
-    assert (".. image:: http://f.hatena.ne.jp/images/fotolife/h/" +
-            "hatenadiary/20041007/20041007101545j.png\n" +
+    assert (".. image:: 20041007101545.jpg\n" +
             "   :width: 60\n" +
             "   :height: 100\n") == directive
 
-def test_fotolife_simple_user_link():
+def test_fotolife_simple_user_link(monkeypatch):
+    monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     link = convert_fotolife("[f:id:hatenadiary]")
     assert "`http://f.hatena.ne.jp/hatenadiary`_" == link
 
-def test_fotolife_simple_pic_link():
+def test_fotolife_simple_pic_link(monkeypatch):
+    monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     link = convert_fotolife("[f:id:hatenadiary:20041007101545j]")
-    assert "`http://f.hatena.ne.jp/hatenadiary/20041007/20041007101545j`_" == link
+    assert "`http://f.hatena.ne.jp/hatenadiary/20041007/20041007101545`_" == link
