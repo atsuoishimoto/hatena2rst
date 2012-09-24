@@ -11,6 +11,7 @@ import unicodedata
 import re
 import sys
 from datetime import datetime
+import urllib2
 
 if sys.version_info[0] == 2:
     from StringIO import StringIO
@@ -23,7 +24,7 @@ from constants import codec, indent, status_flag, image_extensions, filetype_map
 """
 main process
 """
-def main(filename):
+def run(filename):
     with open(filename, 'rb') as f:
         data = StringIO(f.read())
         tree = etree.parse(data, etree.XMLParser(recover=True))
@@ -385,13 +386,15 @@ def convert_id(line):
 #  - http://goo.gl/yxb8
 fotolife_notation = re.compile("""
 \[f:id:(?P<user>[0-9a-zA-Z_\-]+?)
-(:(?P<dt>\d{14})[a-z])?
+(:(?P<dt>\d{14})(?P<filetype>[jp]))?
 (?P<image>:image)?
 (:(?P<option>[a-z0-9,]+))?\]
 """, re.VERBOSE)
 
 image_url_tmpl = (r"http://f.hatena.ne.jp/images/fotolife/" +
                   r"%(initial)s/%(user)s/%(date)s/%(dt)s.%(ext)s")
+
+image_filename_tmpl = (r"%(dt)s.%(ext)s")
 
 def generate_image_directive(image_url, option):
     directive = ".. image:: %s\n" % image_url
@@ -426,6 +429,12 @@ def get_image_option(option_string):
 
     return option_dict
 
+def save_remoteimage(image_url, image_filename):
+    raise Exception
+    imgfile = urllib2.urlopen(image_url).read()
+    with open(image_filename, "wb") as f:
+        f.write(imgfile)
+
 def convert_fotolife(line):
     target = line
     for m in fotolife_notation.finditer(line):
@@ -441,11 +450,14 @@ def convert_fotolife(line):
             """
             content['date'] = content['dt'][:8]
             content['initial'] = content['user'][0]
-            content['ext'] = 'png'
+            content['ext'] = 'png' if content['filetype'] == 'p' else 'jpg'
             image_url = image_url_tmpl % content
+            image_filename = image_filename_tmpl % content
+            
+            save_remoteimage(image_url, image_filename)
             
             option = get_image_option(content['option'])
-            converted = generate_image_directive(image_url, option)
+            converted = generate_image_directive(image_filename, option)
             target = target.replace(notation, converted)
         else:
             converted = r"http://f.hatena.ne.jp/" + content['user']
@@ -468,7 +480,7 @@ def command():
     parser.add_argument("filename", type=str)
     args = parser.parse_args()
 
-    main(args.filename)
+    run(args.filename)
 
 
 if __name__ == '__main__':
