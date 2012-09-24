@@ -238,6 +238,14 @@ chapter_notation = re.compile("""
 \A\s*\*(?P<epoch>[0-9]{9,10})\*\s*(?P<title>.*)
 """, re.VERBOSE)
 
+chapter_tags = re.compile(r"""
+^s*(\[[^]]*\]\s*)+
+""", re.VERBOSE)
+
+chapter_tag = re.compile(r"""
+s*(\[\s*(?P<tag>[^]]*)\])
+""", re.VERBOSE)
+
 def convert_chapter(line):
     matched = chapter_notation.search(line)
     if matched:
@@ -246,9 +254,19 @@ def convert_chapter(line):
         if content['epoch']:
             dt = datetime.fromtimestamp(int(content['epoch']))
         title = content['title']
+        match = chapter_tags.match(title)
+        if match:
+            tags = (m.group('tag').strip() for m 
+                in chapter_tag.finditer(title[:match.end()]))
+            taginfo = "\n:tags:%s" % ",".join(tags)
+                
+            title = title[match.end():]
+        else:
+            taginfo = ""
+
         length = string_width(title)
         division = '=' * (length + 2)
-        return "%s\n %s \n%s" % (division, title, division)
+        return "%s\n %s \n%s%s" % (division, title, division, taginfo)
     else:
         return line
 

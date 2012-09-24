@@ -47,6 +47,10 @@ def test_chapter_multibyte():
     chapter = convert_chapter("*1207008000*テストタイトル")
     assert "================\n テストタイトル \n================" == chapter
     
+def test_chapter_tag():
+    chapter = convert_chapter("*1207008000*[abc] [def] test")
+    assert "======\n test \n======\n:tags:abc,def" == chapter
+
 
 """
 convert_section() and related functions
