@@ -21,9 +21,9 @@ def test_nested_super_pre():
              "print(sys.version)", "||<", "egg"]
     converted_block = convert_quote(block, None)
     assert ("   spam\n\n" +
-            "   .. code-block:: python\n\n" + 
+            "   .. code-block:: python\n   \n" + 
             "      import sys\n" +
-            "      print(sys.version)\n\n" +
+            "      print(sys.version)\n   \n" +
             "   egg\n\n") == converted_block
 
 def test_super_pre():
