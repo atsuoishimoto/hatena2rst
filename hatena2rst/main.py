@@ -430,7 +430,6 @@ def get_image_option(option_string):
     return option_dict
 
 def save_remoteimage(image_url, image_filename):
-    raise Exception
     imgfile = urllib2.urlopen(image_url).read()
     with open(image_filename, "wb") as f:
         f.write(imgfile)
