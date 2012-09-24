@@ -385,7 +385,7 @@ def convert_id(line):
 #  - http://goo.gl/yxb8
 fotolife_notation = re.compile("""
 \[f:id:(?P<user>[0-9a-zA-Z_\-]+?)
-(:(?P<dt>\d{14}[a-z]))?
+(:(?P<dt>\d{14})[a-z])?
 (?P<image>:image)?
 (:(?P<option>[a-z0-9,]+))?\]
 """, re.VERBOSE)
