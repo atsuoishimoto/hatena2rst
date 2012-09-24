@@ -301,7 +301,6 @@ def convert_link(line):
         if url and title:
             converted = " `%s <%s>`_ " % (title, url)
         elif url and not title:
-            print((url, title))
             converted = " `%s`_ " % (url,)
         elif image:
             if url[-3] in image_extensions:
