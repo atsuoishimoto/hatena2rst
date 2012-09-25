@@ -209,7 +209,7 @@ def convert_super_pre(block, filetype):
     """
     indented_block = [ indent + l for l in block ]
     directive = [".. code-block:: %s\n" % filetype_map.get(filetype, "none")]
-    return "\n".join(directive + indented_block) + "\n"
+    return "\n" + "\n".join(directive + indented_block) + "\n"
 
 
 """
