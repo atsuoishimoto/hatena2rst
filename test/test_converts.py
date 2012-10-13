@@ -21,8 +21,10 @@ def test_nested_super_pre():
     block = ["spam", ">|python|", "import sys",
              "print(sys.version)", "||<", "egg"]
     converted_block = convert_quote(block, None)
-    assert ("   spam\n\n" +
-            "   .. code-block:: python\n   \n" + 
+    print(repr(converted_block))
+    assert ("   spam\n\n   \n" +
+            "   .. code-block:: python\n" +
+            "   \n" + 
             "      import sys\n" +
             "      print(sys.version)\n   \n" +
             "   egg\n\n") == converted_block
@@ -31,7 +33,7 @@ def test_super_pre():
     block = ["import sys", "print(sys.version)"]
     filetype = "python"
     converted_block = convert_super_pre(block, filetype)
-    assert (".. code-block:: python\n" +
+    assert ("\n.. code-block:: python\n" +
             "\n" +
             "   import sys\n" +
             "   print(sys.version)\n") == converted_block
@@ -50,7 +52,7 @@ def test_chapter_multibyte():
     
 def test_chapter_tag():
     chapter = convert_chapter("*1207008000*[abc] [def] test")
-    assert "======\n test \n======\n:tags:abc,def" == chapter
+    assert "======\n test \n======\n\n:tags: abc,def\n" == chapter
 
 
 """
@@ -233,7 +235,7 @@ def test_image_directive_no_options():
     image_url = "http://torufurukawa.com/images/bucho.jpg"
     option = {}
     directive = generate_image_directive(image_url, option)
-    assert ".. image:: http://torufurukawa.com/images/bucho.jpg\n" == directive
+    assert "\n.. image:: http://torufurukawa.com/images/bucho.jpg\n" == directive
 
 def test_image_directive_with_options():
     image_url = "http://torufurukawa.com/images/bucho.jpg"
@@ -244,7 +246,8 @@ def test_image_directive_with_options():
         'scale': None
         }
     directive = generate_image_directive(image_url, option)
-    assert (".. image:: http://torufurukawa.com/images/bucho.jpg\n" +
+    assert ("\n" +
+            ".. image:: http://torufurukawa.com/images/bucho.jpg\n" +
             "   :width: 60\n" +
             "   :align: left\n" +
             "   :height: 100\n") == directive
@@ -270,12 +273,12 @@ def test_image_option_2():
 def test_fotolife_normal(monkeypatch):
     monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     directive = convert_fotolife("[f:id:hatenadiary:20041007101545j:image]")
-    assert (".. image:: 20041007101545.jpg\n") == directive
+    assert ("\n.. image:: 20041007101545.jpg\n") == directive
 
 def test_fotolife_with_option(monkeypatch):
     monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     directive = convert_fotolife("[f:id:hatenadiary:20041007101545j:image:w60,h100]")
-    assert (".. image:: 20041007101545.jpg\n" +
+    assert ("\n.. image:: 20041007101545.jpg\n" +
             "   :width: 60\n" +
             "   :height: 100\n") == directive
 

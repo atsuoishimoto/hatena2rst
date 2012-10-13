@@ -38,7 +38,6 @@ classifiers=[
 
 install_requires=[
 	'distribute',
-	'lxml>=2.3'
 	]
 if sys.version_info[0:2] == (2, 6):
     install_requires.append('argparse')

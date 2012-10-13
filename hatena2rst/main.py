@@ -259,7 +259,7 @@ def convert_chapter(line):
         if match:
             tags = (m.group('tag').strip() for m 
                 in chapter_tag.finditer(title[:match.end()]))
-            taginfo = "\n\n:tags:%s\n" % ",".join(tags)
+            taginfo = "\n\n:tags: %s\n" % ",".join(tags)
                 
             title = title[match.end():]
         else:
@@ -397,7 +397,7 @@ image_url_tmpl = (r"http://f.hatena.ne.jp/images/fotolife/" +
 image_filename_tmpl = (r"%(dt)s.%(ext)s")
 
 def generate_image_directive(image_url, option):
-    directive = ".. image:: %s\n" % image_url
+    directive = "\n.. image:: %s\n" % image_url
     for k, v in option.items():
         if v:
             directive += "   :%s: %s\n" % (k, v)
