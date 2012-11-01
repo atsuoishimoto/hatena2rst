@@ -291,3 +291,12 @@ def test_fotolife_simple_pic_link(monkeypatch):
     monkeypatch.setattr(hatena2rst.main, "save_remoteimage", lambda url, filename: 0)
     link = convert_fotolife("[f:id:hatenadiary:20041007101545j]")
     assert "`http://f.hatena.ne.jp/hatenadiary/20041007/20041007101545`_" == link
+
+
+"""
+escape_specials()
+"""
+
+def test_escape_specials():
+    assert escape_specials(r"\a*b'c") == r"\\a\*b\'c"
+

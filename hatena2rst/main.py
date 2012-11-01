@@ -113,7 +113,7 @@ def parse_body(body):
             end = quote_sp_end_notation.search(l)
             if end and depth == 0:
                 ret = convert_quote(buffer, content['site'])
-                result.extend(ret.split('\n'))
+                result.extend(convert_inlines(l) for l in ret.split('\n'))
                 buffer, content, status = [], {}, status_flag["NORMAL"]
                 continue
             elif end and depth > 0:
@@ -140,9 +140,8 @@ def parse_body(body):
                 elif content['sp']:
                     status = status_flag["IN_SUPERPRE"]
             else:
-                result.append(l)
+                result.append(convert_inlines(l))
 
-    result = [ convert_inlines(l) for l in result ]
     return '\n'.join(result)
 
 
@@ -225,10 +224,13 @@ def convert_inlines(line):
     line = convert_section(line)
     line = convert_chapter(line)
 
+    line = escape_specials(line)
+
     line = convert_link(line)
     line = convert_list(line)
     line = convert_fotolife(line)
     line = convert_id(line)
+    
     return line
 
 
@@ -468,6 +470,15 @@ def convert_fotolife(line):
 
     return target
 
+
+special_chars = re.compile(r"""([*'\\])""")
+
+def escape_specials(line):
+    """
+    Escape special characters (\, *, ').
+    """
+    return special_chars.sub(r"\\\1", line)
+    
 
 def command():
     from argparse import ArgumentParser
