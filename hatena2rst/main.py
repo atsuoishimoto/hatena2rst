@@ -263,7 +263,6 @@ def convert_chapter(line):
         if match:
             tags = (m.group('tag').strip() for m 
                 in chapter_tag.finditer(title[:match.end()]))
-#            taginfo = "\n\n:tags: %s\n\n\ \n\n" % ",".join(tags)
             fields.append(":tags: %s" % ", ".join(tags))
             title = title[match.end():]
 
