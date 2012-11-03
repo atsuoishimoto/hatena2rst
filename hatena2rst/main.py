@@ -261,7 +261,7 @@ def convert_chapter(line):
         if match:
             tags = (m.group('tag').strip() for m 
                 in chapter_tag.finditer(title[:match.end()]))
-            taginfo = "\n\n:tags: %s\n" % ",".join(tags)
+            taginfo = "\n\n:tags: %s\n\n\ \n\n" % ",".join(tags)
                 
             title = title[match.end():]
         else:
@@ -471,11 +471,11 @@ def convert_fotolife(line):
     return target
 
 
-special_chars = re.compile(r"""([*'\\])""")
+special_chars = re.compile(r"""([*'])""")
 
 def escape_specials(line):
     """
-    Escape special characters (\, *, ').
+    Escape special characters (*, ').
     """
     return special_chars.sub(r"\\\1", line)
     

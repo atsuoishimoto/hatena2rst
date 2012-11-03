@@ -52,7 +52,7 @@ def test_chapter_multibyte():
     
 def test_chapter_tag():
     chapter = convert_chapter("*1207008000*[abc] [def] test")
-    assert "======\n test \n======\n\n:tags: abc,def\n" == chapter
+    assert "======\n test \n======\n\n:tags: abc,def\n\n\\ \n\n" == chapter
 
 
 """
@@ -298,5 +298,5 @@ escape_specials()
 """
 
 def test_escape_specials():
-    assert escape_specials(r"\a*b'c") == r"\\a\*b\'c"
+    assert escape_specials(r"\a*b'c") == r"\a\*b\'c"
 
