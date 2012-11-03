@@ -253,23 +253,27 @@ def convert_chapter(line):
     matched = chapter_notation.search(line)
     if matched:
         content = matched.groupdict()
-        dt = None
+        fields = []
         if content['epoch']:
-            dt = datetime.fromtimestamp(int(content['epoch']))
+            d = datetime.fromtimestamp(int(content['epoch']))
+            fields.append(":date: %s" % d.strftime("%Y-%m-%d %H:%m"))
+
         title = content['title']
         match = chapter_tags.match(title)
         if match:
             tags = (m.group('tag').strip() for m 
                 in chapter_tag.finditer(title[:match.end()]))
-            taginfo = "\n\n:tags: %s\n\n\ \n\n" % ",".join(tags)
-                
+#            taginfo = "\n\n:tags: %s\n\n\ \n\n" % ",".join(tags)
+            fields.append(":tags: %s" % ", ".join(tags))
             title = title[match.end():]
-        else:
-            taginfo = ""
 
         length = string_width(title)
         division = '=' * (length + 2)
-        return "%s\n %s \n%s%s" % (division, title, division, taginfo)
+
+        fields = "\n".join(fields)
+        if fields:
+            fields = "\n\n%s\n\n\\ \n\n" % fields
+        return "%s\n %s \n%s%s" % (division, title, division, fields)
     else:
         return line
 

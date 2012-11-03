@@ -44,15 +44,15 @@ convert_chapter()
 """
 def test_chapter_normal():
     chapter = convert_chapter("*1207008000*test")
-    assert "======\n test \n======" == chapter
+    assert "======\n test \n======\n\n:date: 2008-04-01 09:04\n\n\\ \n\n" == chapter
 
 def test_chapter_multibyte():
     chapter = convert_chapter("*1207008000*テストタイトル")
-    assert "================\n テストタイトル \n================" == chapter
+    assert "================\n テストタイトル \n================\n\n:date: 2008-04-01 09:04\n\n\\ \n\n" == chapter
     
 def test_chapter_tag():
     chapter = convert_chapter("*1207008000*[abc] [def] test")
-    assert "======\n test \n======\n\n:tags: abc,def\n\n\\ \n\n" == chapter
+    assert "======\n test \n======\n\n:date: 2008-04-01 09:04\n:tags: abc, def\n\n\\ \n\n" == chapter
 
 
 """
